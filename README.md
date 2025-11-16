@@ -7,4 +7,4 @@ You can view the live app here: [My Shiny App on shinyapps.io](https://ht3bw7-in
 ## About
 
 This app visualizes live and still births data in Scotland by financial year and hospital since 2000.
-using data from Public Health Scotland - Births by Hospital dataset. Accessed via Public Health Scotland Open Data.
+using the Births by Hospital dataset. Accessed via Public Health Scotland Open Data.
