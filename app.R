@@ -6,13 +6,13 @@ library(tidyverse)
 library(janitor)
 
 # Load your datasets here or make sure they are loaded before running the app:
-
 hospitals <- read_csv(
-  "https://www.opendata.nhs.scot/dataset/cbd1802e-0e04-4282-88eb-d7bdcfb120f0/resource/c698f450-eeed-41a0-88f7-c1e40a568acc/download/hospitals.csv")|>
-  janitor::clean_names()
-births_scotland <- read.csv("https://www.opendata.nhs.scot/dataset/df10dbd4-81b3-4bfa-83ac-b14a5ec62296/resource/d534ae02-7890-4fbc-8cc7-f223d53fb11b/download/10.3_birthsbyhospital.csv")|>
-  janitor::clean_names()
+  "https://www.opendata.nhs.scot/dataset/cbd1802e-0e04-4282-88eb-d7bdcfb120f0/resource/c698f450-eeed-41a0-88f7-c1e40a568acc/download/hospitals.csv"
+) |> janitor::clean_names()
 
+births_scotland <- read.csv(
+  "https://www.opendata.nhs.scot/dataset/df10dbd4-81b3-4bfa-83ac-b14a5ec62296/resource/d534ae02-7890-4fbc-8cc7-f223d53fb11b/download/10.3_birthsbyhospital.csv"
+) |> janitor::clean_names()
 
 # Join births with hospital names for filtering and display
 births_data <- births_scotland %>%
@@ -34,6 +34,12 @@ ui <- fluidPage(
         label = "Select Hospital:",
         choices = c("All", unique(na.omit(births_data$hospital_name))),
         selected = "All"
+      ),
+      hr(),
+      helpText(
+        "Data source: Public Health Scotland - Births by Hospital dataset. ",
+        "Accessed via ",
+        tags$a(href = "https://www.opendata.nhs.scot/", "Public Health Scotland Open Data", target = "_blank")
       )
     ),
     mainPanel(
