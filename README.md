@@ -1,4 +1,6 @@
-# My First Shiny App
+## My First Shiny App
+
+ 100% reproducible !
 
 This repository contains the source code for and exercise I did with the only purpose to learn how to do a basic 
 Shiny application in R. 
