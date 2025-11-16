@@ -5,37 +5,41 @@ library(stringr)
 library(tidyverse)
 library(janitor)
 
-# Load your datasets here or make sure they are loaded before running the app:
+# Load datasets consistently with read_csv()
 hospitals <- read_csv(
   "https://www.opendata.nhs.scot/dataset/cbd1802e-0e04-4282-88eb-d7bdcfb120f0/resource/c698f450-eeed-41a0-88f7-c1e40a568acc/download/hospitals.csv"
 ) |> janitor::clean_names()
 
-births_scotland <- read.csv(
+births_scotland <- read_csv(
   "https://www.opendata.nhs.scot/dataset/df10dbd4-81b3-4bfa-83ac-b14a5ec62296/resource/d534ae02-7890-4fbc-8cc7-f223d53fb11b/download/10.3_birthsbyhospital.csv"
 ) |> janitor::clean_names()
 
-# Join births with hospital names for filtering and display
+# Join births with hospital names
 births_data <- births_scotland %>%
   left_join(hospitals %>% select(hospital_code, hospital_name),
             by = c("hospital" = "hospital_code"))
 
 ui <- fluidPage(
+  # App title
   titlePanel("Live and Still Births in Scotland by Financial Year and Hospital since 2000"),
   sidebarLayout(
     sidebarPanel(
+      # Select outcome filter
       selectInput(
         inputId = "selected_outcome",
         label = "Select Outcome:",
         choices = c("Live", "Still"),
         selected = "Live"
       ),
+      # Select hospital filter, sorted alphabetically
       selectInput(
         inputId = "selected_hospital",
         label = "Select Hospital:",
-        choices = c("All", unique(na.omit(births_data$hospital_name))),
+        choices = c("All", unique(sort(na.omit(births_data$hospital_name)))),
         selected = "All"
       ),
       hr(),
+      # Data source information
       helpText(
         "Data source: Public Health Scotland - Births by Hospital dataset. ",
         "Accessed via ",
@@ -43,6 +47,7 @@ ui <- fluidPage(
       )
     ),
     mainPanel(
+      # Bar chart output
       plotOutput("births_bar_chart")
     )
   )
@@ -50,10 +55,10 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   filtered_data <- reactive({
-    req(births_data)  # Ensure births_data is loaded
+    req(births_data)
     
     data <- births_data %>%
-      filter(outcome == input$selected_outcome) %>%  # Use input for outcome
+      filter(outcome == input$selected_outcome) %>%
       mutate(financial_year_start = as.numeric(str_sub(financial_year, 1, 4))) %>%
       filter(!is.na(financial_year_start) & financial_year_start >= 2000)
     
@@ -69,6 +74,9 @@ server <- function(input, output) {
   
   output$births_bar_chart <- renderPlot({
     plot_data <- filtered_data()
+    # Show message if no data to plot
+    validate(need(nrow(plot_data) > 0, "No births data available for this selection"))
+    
     ggplot(plot_data, aes(x = factor(financial_year_start), y = total_births)) +
       geom_bar(stat = "identity", fill = "#008080") +
       labs(x = "Financial Year Start", y = "Total Births",

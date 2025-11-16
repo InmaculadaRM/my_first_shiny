@@ -5,7 +5,7 @@ account: ht3bw7-inma-ruiz
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 16079229
-bundleId: 11185555
+bundleId:
 url: https://ht3bw7-inma-ruiz.shinyapps.io/Births_Scotland/
 version: 1
 asMultiple: FALSE
