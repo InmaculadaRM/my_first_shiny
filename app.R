@@ -39,7 +39,7 @@ ui <- fluidPage(
       helpText(
         "Data source: Public Health Scotland - Births by Hospital dataset. ",
         "Accessed via ",
-        tags$a(href = "https://www.opendata.nhs.scot/", "Public Health Scotland Open Data", target = "_blank")
+        tags$a(href = "https://www.opendata.nhs.scot/dataset/births-in-scottish-hospitals", "Public Health Scotland Open Data", target = "_blank")
       )
     ),
     mainPanel(
